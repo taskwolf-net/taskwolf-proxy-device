@@ -1,4 +1,4 @@
-package net.taskwolf.proxy.device.distribution;
+package net.taskwolf.proxy.device.distribution.notification;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -9,6 +9,7 @@ import net.taskwolf.core.event.Hook;
 import net.taskwolf.device.distribution.notification.event.NotificationRequestEvent;
 import net.taskwolf.device.distribution.notification.packet.outgoing.PacketOutgoingNotificationRequest;
 import net.taskwolf.device.distribution.notification.packet.outgoing.PacketOutgoingNotificationResponse;
+import net.taskwolf.proxy.device.distribution.device.DeviceRepository;
 
 @Singleton
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE, onConstructor = @__({@Inject}))

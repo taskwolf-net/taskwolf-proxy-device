@@ -1,4 +1,4 @@
-package net.taskwolf.proxy.device.distribution;
+package net.taskwolf.proxy.device.distribution.device;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;

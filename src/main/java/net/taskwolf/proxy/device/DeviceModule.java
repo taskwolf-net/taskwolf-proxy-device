@@ -17,7 +17,11 @@ import net.taskwolf.device.distribution.notification.event.NotificationRequestEv
 import net.taskwolf.device.distribution.notification.event.NotificationResponseEvent;
 import net.taskwolf.device.distribution.notification.packet.incoming.PacketIncomingNotificationRequest;
 import net.taskwolf.device.distribution.notification.packet.incoming.PacketIncomingNotificationResponse;
-import net.taskwolf.proxy.device.distribution.*;
+import net.taskwolf.proxy.device.distribution.command.CommandRequestHook;
+import net.taskwolf.proxy.device.distribution.command.CommandResponseHook;
+import net.taskwolf.proxy.device.distribution.device.DeviceLoginHook;
+import net.taskwolf.proxy.device.distribution.device.DeviceLogoutHook;
+import net.taskwolf.proxy.device.distribution.notification.NotificationRequestHook;
 import net.taskwolf.proxy.module.ProxyModule;
 import net.taskwolf.proxy.module.ProxyModuleDescription;
 import net.taskwolf.proxy.module.ProxyModuleLoadPriority;
