@@ -6,9 +6,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import net.taskwolf.core.event.EventHook;
 import net.taskwolf.core.event.Hook;
-import net.taskwolf.device.distribution.event.NotificationRequestEvent;
-import net.taskwolf.device.distribution.packet.outgoing.PacketOutgoingNotificationRequest;
-import net.taskwolf.device.distribution.packet.outgoing.PacketOutgoingNotificationResponse;
+import net.taskwolf.device.distribution.notification.event.NotificationRequestEvent;
+import net.taskwolf.device.distribution.notification.packet.outgoing.PacketOutgoingNotificationRequest;
+import net.taskwolf.device.distribution.notification.packet.outgoing.PacketOutgoingNotificationResponse;
 
 @Singleton
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE, onConstructor = @__({@Inject}))

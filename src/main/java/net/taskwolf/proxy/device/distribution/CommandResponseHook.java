@@ -6,8 +6,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import net.taskwolf.core.event.EventHook;
 import net.taskwolf.core.event.Hook;
-import net.taskwolf.device.distribution.event.CommandResponseEvent;
-import net.taskwolf.device.distribution.packet.outgoing.PacketOutgoingCommandResponse;
+import net.taskwolf.device.distribution.command.event.CommandResponseEvent;
+import net.taskwolf.device.distribution.command.packet.outgoing.PacketOutgoingCommandResponse;
 
 @Singleton
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE, onConstructor = @__({@Inject}))

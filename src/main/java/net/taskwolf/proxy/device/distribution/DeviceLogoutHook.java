@@ -6,7 +6,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import net.taskwolf.core.event.EventHook;
 import net.taskwolf.core.event.Hook;
-import net.taskwolf.device.distribution.event.DeviceLogoutEvent;
+import net.taskwolf.device.distribution.device.event.DeviceLogoutEvent;
 
 @Singleton
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE, onConstructor = @__({@Inject}))
