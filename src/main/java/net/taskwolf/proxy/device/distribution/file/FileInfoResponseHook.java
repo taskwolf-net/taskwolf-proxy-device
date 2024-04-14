@@ -6,12 +6,22 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import net.taskwolf.core.event.EventHook;
 import net.taskwolf.core.event.Hook;
+import net.taskwolf.device.distribution.file.event.FileInfoResponseEvent;
+import net.taskwolf.device.distribution.file.packet.outgoing.PacketOutgoingFileInfoResponse;
 
 @Singleton
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE, onConstructor = @__({@Inject}))
 public final class FileInfoResponseHook implements Hook {
-  @EventHook
-  private void fileInfoResponse(FileInfoResponseHook event) {
+  private final FileRepository fileRepository;
 
+  @EventHook
+  private void fileInfoResponse(FileInfoResponseEvent event) {
+    var client = fileRepository.findFileClient(event.infoId());
+    if (client.isEmpty()) {
+      return;
+    }
+    client.get().sendPacket(new PacketOutgoingFileInfoResponse(event.infoId(),
+      event.success()));
+    fileRepository.unregisterFile(event.infoId());
   }
 }
