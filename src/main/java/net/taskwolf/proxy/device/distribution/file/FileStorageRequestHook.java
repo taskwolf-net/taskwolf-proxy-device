@@ -15,7 +15,7 @@ import net.taskwolf.proxy.device.distribution.device.DeviceRepository;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE, onConstructor = @__({@Inject}))
 public final class FileStorageRequestHook implements Hook {
   private final DeviceRepository deviceRepository;
-  private final FileRepository commandRepository;
+  private final FileRepository fileRepository;
 
   @EventHook
   private void fileStorageRequest(FileStorageRequestEvent event) {
@@ -27,7 +27,7 @@ public final class FileStorageRequestHook implements Hook {
     }
     client.get().sendPacket(new PacketOutgoingFileStorageRequest(event.storeId(),
       event.deviceId(), event.path()));
-    commandRepository.registerFile(event.storeId(), event.client());
+    fileRepository.registerFile(event.storeId(), event.client());
   }
 }
 
