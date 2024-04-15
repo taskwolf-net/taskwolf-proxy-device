@@ -26,7 +26,7 @@ public final class FileInfoRequestHook implements Hook {
       return;
     }
     client.get().sendPacket(new PacketOutgoingFileInfoRequest(event.infoId(),
-      event.deviceId(), event.path()));
+      event.deviceId(), event.filePath(), event.fileName()));
     fileRepository.registerFile(event.infoId(), event.client());
   }
 }

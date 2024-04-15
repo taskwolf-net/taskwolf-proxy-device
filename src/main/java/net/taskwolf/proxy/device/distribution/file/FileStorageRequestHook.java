@@ -26,7 +26,7 @@ public final class FileStorageRequestHook implements Hook {
       return;
     }
     client.get().sendPacket(new PacketOutgoingFileStorageRequest(event.storeId(),
-      event.deviceId(), event.path()));
+      event.deviceId(), event.filePath(), event.fileName()));
     fileRepository.registerFile(event.storeId(), event.client());
   }
 }
