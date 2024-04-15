@@ -29,10 +29,7 @@ import net.taskwolf.proxy.device.distribution.command.CommandRequestHook;
 import net.taskwolf.proxy.device.distribution.command.CommandResponseHook;
 import net.taskwolf.proxy.device.distribution.device.DeviceLoginHook;
 import net.taskwolf.proxy.device.distribution.device.DeviceLogoutHook;
-import net.taskwolf.proxy.device.distribution.file.FileInfoRequestHook;
-import net.taskwolf.proxy.device.distribution.file.FileInfoResponseHook;
-import net.taskwolf.proxy.device.distribution.file.FileStorageRequestHook;
-import net.taskwolf.proxy.device.distribution.file.FileStorageResponseHook;
+import net.taskwolf.proxy.device.distribution.file.*;
 import net.taskwolf.proxy.device.distribution.notification.NotificationRequestHook;
 import net.taskwolf.proxy.module.ProxyModule;
 import net.taskwolf.proxy.module.ProxyModuleDescription;
@@ -53,6 +50,8 @@ public final class DeviceModule extends ProxyModule {
     registerPackets();
     registerPacketEvents();
     registerHooks();
+    registerDistributionExemption(FileStorageExemption.create(injector()
+      .getInstance(FileStorageRepository.class)));
   }
 
   private void registerPackets() throws Exception {
@@ -102,7 +101,8 @@ public final class DeviceModule extends ProxyModule {
   private void registerFilePacketEvents(PacketEventRepository repository) {
     repository.registerEvent(PacketIncomingFileStorageRequest.class,
       (client, packet) -> FileStorageRequestEvent.create(packet.storageId(),
-        packet.deviceId(), packet.filePath(), packet.fileName(), client));
+        packet.deviceId(), packet.filePath(), packet.fileName(),
+        packet.content(), client));
     repository.registerEvent(PacketIncomingFileStorageResponse.class,
       (client, packet) -> FileStorageResponseEvent.create(packet.storageId(),
         packet.success()));
@@ -111,7 +111,7 @@ public final class DeviceModule extends ProxyModule {
         packet.deviceId(), packet.filePath(), packet.fileName(), client));
     repository.registerEvent(PacketIncomingFileInfoResponse.class,
       (client, packet) -> FileInfoResponseEvent.create(packet.infoId(),
-        packet.success()));
+        packet.content(), packet.success()));
   }
 
   private void registerHooks() {

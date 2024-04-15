@@ -21,7 +21,7 @@ public final class FileInfoResponseHook implements Hook {
       return;
     }
     client.get().sendPacket(new PacketOutgoingFileInfoResponse(event.infoId(),
-      event.success()));
+      event.content(), event.success()));
     fileRepository.unregisterFile(event.infoId());
   }
 }

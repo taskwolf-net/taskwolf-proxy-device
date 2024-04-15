@@ -22,7 +22,7 @@ public final class FileInfoRequestHook implements Hook {
     var client = deviceRepository.findDeviceClient(event.deviceId());
     if (client.isEmpty()) {
       event.client().sendPacket(new PacketOutgoingFileInfoResponse(
-        event.infoId(), false));
+        event.infoId(), new byte[0], false));
       return;
     }
     client.get().sendPacket(new PacketOutgoingFileInfoRequest(event.infoId(),

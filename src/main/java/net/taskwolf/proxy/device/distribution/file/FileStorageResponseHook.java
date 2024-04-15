@@ -13,6 +13,7 @@ import net.taskwolf.device.distribution.file.packet.outgoing.PacketOutgoingFileS
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE, onConstructor = @__({@Inject}))
 public final class FileStorageResponseHook implements Hook {
   private final FileRepository fileRepository;
+  private final FileStorageRepository fileStorageRepository;
 
   @EventHook
   private void fileStorageResponse(FileStorageResponseEvent event) {
@@ -23,5 +24,6 @@ public final class FileStorageResponseHook implements Hook {
     client.get().sendPacket(new PacketOutgoingFileStorageResponse(
       event.storageId(), event.success()));
     fileRepository.unregisterFile(event.storageId());
+    fileStorageRepository.unregisterStorage(event.storageId());
   }
 }
