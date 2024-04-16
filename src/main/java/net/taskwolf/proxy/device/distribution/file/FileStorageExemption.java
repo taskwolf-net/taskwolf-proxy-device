@@ -23,10 +23,10 @@ public final class FileStorageExemption extends DistributionExemption {
   @Override
   public Optional<Node> preference(String payload) {
     var body = new JSONObject(payload);
-    if (!body.has("storeId")) {
+    if (!body.has("storage")) {
       return Optional.empty();
     }
-    var storeId = parseStoreId(body.getString("storeId"));
+    var storeId = parseStoreId(body.getString("storage"));
     if (storeId.isEmpty()) {
       return Optional.empty();
     }
