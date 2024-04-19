@@ -13,14 +13,8 @@ import net.taskwolf.device.distribution.device.event.DeviceLoginEvent;
 import net.taskwolf.device.distribution.device.event.DeviceLogoutEvent;
 import net.taskwolf.device.distribution.device.packet.incoming.PacketIncomingDeviceLogin;
 import net.taskwolf.device.distribution.device.packet.incoming.PacketIncomingDeviceLogout;
-import net.taskwolf.device.distribution.file.event.FileInfoRequestEvent;
-import net.taskwolf.device.distribution.file.event.FileInfoResponseEvent;
-import net.taskwolf.device.distribution.file.event.FileStorageRequestEvent;
-import net.taskwolf.device.distribution.file.event.FileStorageResponseEvent;
-import net.taskwolf.device.distribution.file.packet.incoming.PacketIncomingFileInfoRequest;
-import net.taskwolf.device.distribution.file.packet.incoming.PacketIncomingFileInfoResponse;
-import net.taskwolf.device.distribution.file.packet.incoming.PacketIncomingFileStorageRequest;
-import net.taskwolf.device.distribution.file.packet.incoming.PacketIncomingFileStorageResponse;
+import net.taskwolf.device.distribution.file.event.*;
+import net.taskwolf.device.distribution.file.packet.incoming.*;
 import net.taskwolf.device.distribution.notification.event.NotificationRequestEvent;
 import net.taskwolf.device.distribution.notification.event.NotificationResponseEvent;
 import net.taskwolf.device.distribution.notification.packet.incoming.PacketIncomingNotificationRequest;
@@ -66,6 +60,8 @@ public final class DeviceModule extends ProxyModule {
     packetRegistry.registerPacket(PacketIncomingFileStorageResponse.class);
     packetRegistry.registerPacket(PacketIncomingFileInfoRequest.class);
     packetRegistry.registerPacket(PacketIncomingFileInfoResponse.class);
+    packetRegistry.registerPacket(PacketIncomingFileDeleteRequest.class);
+    packetRegistry.registerPacket(PacketIncomingFileDeleteResponse.class);
   }
 
   private void registerPacketEvents() {
@@ -112,6 +108,12 @@ public final class DeviceModule extends ProxyModule {
     repository.registerEvent(PacketIncomingFileInfoResponse.class,
       (client, packet) -> FileInfoResponseEvent.create(packet.infoId(),
         packet.content(), packet.success()));
+    repository.registerEvent(PacketIncomingFileDeleteRequest.class,
+      (client, packet) -> FileDeleteRequestEvent.create(packet.deleteId(),
+        packet.deviceId(), packet.filePath(), packet.fileName(), client));
+    repository.registerEvent(PacketIncomingFileDeleteResponse.class,
+      (client, packet) -> FileDeleteResponseEvent.create(packet.deleteId(),
+        packet.success()));
   }
 
   private void registerHooks() {
@@ -125,6 +127,8 @@ public final class DeviceModule extends ProxyModule {
     hookRegistry.register(injector().getInstance(FileStorageResponseHook.class));
     hookRegistry.register(injector().getInstance(FileInfoRequestHook.class));
     hookRegistry.register(injector().getInstance(FileInfoResponseHook.class));
+    hookRegistry.register(injector().getInstance(FileDeleteRequestHook.class));
+    hookRegistry.register(injector().getInstance(FileDeleteResponseHook.class));
   }
 
   @Override
