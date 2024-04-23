@@ -6,26 +6,46 @@ import com.google.inject.Singleton;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import net.taskwolf.core.distribution.client.DistributionClient;
+import net.taskwolf.proxy.device.distribution.device.DeviceRequestEntry;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 @Singleton
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE, onConstructor = @__({@Inject}))
 public final class CommandRepository {
-  private final Map<UUID, DistributionClient> commands = Maps.newHashMap();
+  private final Map<DeviceRequestEntry, ScheduledFuture<?>> commands = Maps.newHashMap();
+  private final ScheduledExecutorService executorService =
+    Executors.newSingleThreadScheduledExecutor();
 
   public void registerCommand(UUID command, DistributionClient client) {
-    commands.put(command, client);
+    var schedule = executorService.schedule(() -> unregisterCommand(command),
+      10, TimeUnit.SECONDS);
+    commands.put(DeviceRequestEntry.create(command, client), schedule);
   }
 
   public void unregisterCommand(UUID command) {
-    commands.remove(command);
+    var clientOptional = commands.keySet().stream()
+      .filter(request -> request.id().equals(command))
+      .findFirst();
+    if (clientOptional.isEmpty()) {
+      return;
+    }
+    var content = clientOptional.get();
+    commands.get(content).cancel(true);
+    commands.remove(content);
   }
 
   public Optional<DistributionClient> findCommandClient(UUID command) {
-    return Optional.ofNullable(commands.get(command));
+    return commands.keySet().stream()
+      .filter(request -> request.id().equals(command))
+      .map(DeviceRequestEntry::client)
+      .findFirst();
   }
 }
 
