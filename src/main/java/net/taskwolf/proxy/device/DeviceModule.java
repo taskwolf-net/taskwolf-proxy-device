@@ -23,6 +23,7 @@ import net.taskwolf.proxy.device.distribution.command.CommandRequestHook;
 import net.taskwolf.proxy.device.distribution.command.CommandResponseHook;
 import net.taskwolf.proxy.device.distribution.device.DeviceLoginHook;
 import net.taskwolf.proxy.device.distribution.device.DeviceLogoutHook;
+import net.taskwolf.proxy.device.distribution.device.NodeDisconnectHook;
 import net.taskwolf.proxy.device.distribution.file.*;
 import net.taskwolf.proxy.device.distribution.notification.NotificationRequestHook;
 import net.taskwolf.proxy.module.ProxyModule;
@@ -120,6 +121,7 @@ public final class DeviceModule extends ProxyModule {
     var hookRegistry = injector().getInstance(HookRegistry.class);
     hookRegistry.register(injector().getInstance(DeviceLoginHook.class));
     hookRegistry.register(injector().getInstance(DeviceLogoutHook.class));
+    hookRegistry.register(injector().getInstance(NodeDisconnectHook.class));
     hookRegistry.register(injector().getInstance(NotificationRequestHook.class));
     hookRegistry.register(injector().getInstance(CommandRequestHook.class));
     hookRegistry.register(injector().getInstance(CommandResponseHook.class));

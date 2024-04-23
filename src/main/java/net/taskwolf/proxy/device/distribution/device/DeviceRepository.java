@@ -23,6 +23,14 @@ public final class DeviceRepository {
     clients.remove(device);
   }
 
+  public void unregisterDevicesOfClient(DistributionClient client) {
+    for (var entry : clients.entrySet()) {
+      if (entry.getValue() == client) {
+        clients.remove(entry.getKey());
+      }
+    }
+  }
+
   public Optional<DistributionClient> findDeviceClient(String device) {
     return Optional.ofNullable(clients.get(device));
   }
