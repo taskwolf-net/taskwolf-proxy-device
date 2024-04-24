@@ -5,6 +5,7 @@ import net.taskwolf.core.distribution.packet.PacketEventRepository;
 import net.taskwolf.core.distribution.packet.PacketRegistry;
 import net.taskwolf.core.event.HookRegistry;
 import net.taskwolf.core.log.Log;
+import net.taskwolf.device.DeviceConfiguration;
 import net.taskwolf.device.distribution.command.event.CommandRequestEvent;
 import net.taskwolf.device.distribution.command.event.CommandResponseEvent;
 import net.taskwolf.device.distribution.command.packet.incoming.PacketIncomingCommandRequest;
@@ -47,6 +48,8 @@ public final class DeviceModule extends ProxyModule {
     registerHooks();
     registerDistributionExemption(FileStorageExemption.create(injector()
       .getInstance(FileStorageRepository.class)));
+    FileWorkspaceSchedule.create(injector().getInstance(DeviceConfiguration.class))
+      .start();
   }
 
   private void registerPackets() throws Exception {
