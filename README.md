@@ -4,6 +4,6 @@ This module enables the smooth running of device functions within the Taskwolf n
 
 ## Status
 
-|             | Build Status                                                                                                               |
-|-------------|----------------------------------------------------------------------------------------------------------------------------|
-| Master      | ![Java CI with Gradle](https://github.com/TaskwolfNET/taskwolf-proxy-device/workflows/Java%20CI%20with%20Gradle/badge.svg) |
+|             | Build Status                                                                                           |
+|-------------|--------------------------------------------------------------------------------------------------------|
+| Master      | ![Java CI with Gradle](https://git.taskwolf.net/root/taskwolf-proxy-device/badges/master/pipeline.svg) |
