@@ -1,4 +1,4 @@
-package net.taskwolf.proxy.device.distribution.notification;
+package net.taskwolf.proxy.device.distribution.notification.hook;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -6,10 +6,10 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import net.taskwolf.core.event.EventHook;
 import net.taskwolf.core.event.Hook;
-import net.taskwolf.device.distribution.notification.event.NotificationRequestEvent;
 import net.taskwolf.device.distribution.notification.packet.outgoing.PacketOutgoingNotificationRequest;
 import net.taskwolf.device.distribution.notification.packet.outgoing.PacketOutgoingNotificationResponse;
 import net.taskwolf.proxy.device.distribution.device.DeviceRepository;
+import net.taskwolf.proxy.device.distribution.notification.event.ProxyNotificationRequestEvent;
 
 @Singleton
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE, onConstructor = @__({@Inject}))
@@ -17,7 +17,7 @@ public final class NotificationRequestHook implements Hook {
   private final DeviceRepository deviceRepository;
 
   @EventHook
-  private void notificationRequest(NotificationRequestEvent event) {
+  private void notificationRequest(ProxyNotificationRequestEvent event) {
     var client = deviceRepository.findDeviceClient(event.deviceId());
     if (client.isEmpty()) {
       event.client().sendPacket(new PacketOutgoingNotificationResponse(

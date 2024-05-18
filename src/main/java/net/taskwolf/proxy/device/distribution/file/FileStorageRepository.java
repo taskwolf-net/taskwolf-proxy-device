@@ -5,8 +5,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import net.taskwolf.core.distribution.client.DistributionClient;
 import net.taskwolf.proxy.device.distribution.device.DeviceRequestEntry;
+import net.taskwolf.proxy.distribution.client.ProxyClient;
 
 import java.util.Map;
 import java.util.Optional;
@@ -23,7 +23,7 @@ public final class FileStorageRepository {
   private final ScheduledExecutorService executorService =
     Executors.newSingleThreadScheduledExecutor();
 
-  public void registerStorage(UUID storage, DistributionClient client) {
+  public void registerStorage(UUID storage, ProxyClient client) {
     var schedule = executorService.schedule(() -> unregisterStorage(storage),
       10, TimeUnit.SECONDS);
     clients.put(DeviceRequestEntry.create(storage, client), schedule);
@@ -41,7 +41,7 @@ public final class FileStorageRepository {
     clients.remove(content);
   }
 
-  public Optional<DistributionClient> findStorageClient(UUID storage) {
+  public Optional<ProxyClient> findStorageClient(UUID storage) {
     return clients.keySet().stream()
       .filter(request -> request.id().equals(storage))
       .map(DeviceRequestEntry::client)

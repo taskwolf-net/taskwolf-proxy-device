@@ -5,7 +5,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import net.taskwolf.core.distribution.client.DistributionClient;
+import net.taskwolf.proxy.distribution.client.ProxyClient;
 
 import java.util.Map;
 import java.util.Optional;
@@ -13,9 +13,9 @@ import java.util.Optional;
 @Singleton
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE, onConstructor = @__({@Inject}))
 public final class DeviceRepository {
-  private final Map<String, DistributionClient> clients = Maps.newHashMap();
+  private final Map<String, ProxyClient> clients = Maps.newHashMap();
 
-  public void registerDevice(String device, DistributionClient client) {
+  public void registerDevice(String device, ProxyClient client) {
     clients.put(device, client);
   }
 
@@ -23,7 +23,7 @@ public final class DeviceRepository {
     clients.remove(device);
   }
 
-  public void unregisterDevicesOfClient(DistributionClient client) {
+  public void unregisterDevicesOfClient(ProxyClient client) {
     for (var entry : clients.entrySet()) {
       if (entry.getValue() == client) {
         clients.remove(entry.getKey());
@@ -31,7 +31,7 @@ public final class DeviceRepository {
     }
   }
 
-  public Optional<DistributionClient> findDeviceClient(String device) {
+  public Optional<ProxyClient> findDeviceClient(String device) {
     return Optional.ofNullable(clients.get(device));
   }
 }

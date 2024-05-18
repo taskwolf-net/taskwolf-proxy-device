@@ -5,8 +5,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import net.taskwolf.core.distribution.client.DistributionClient;
 import net.taskwolf.proxy.device.distribution.device.DeviceRequestEntry;
+import net.taskwolf.proxy.distribution.client.ProxyClient;
 
 import java.util.Map;
 import java.util.Optional;
@@ -23,7 +23,7 @@ public final class CommandRepository {
   private final ScheduledExecutorService executorService =
     Executors.newSingleThreadScheduledExecutor();
 
-  public void registerCommand(UUID command, DistributionClient client) {
+  public void registerCommand(UUID command, ProxyClient client) {
     var schedule = executorService.schedule(() -> unregisterCommand(command),
       10, TimeUnit.SECONDS);
     commands.put(DeviceRequestEntry.create(command, client), schedule);
@@ -41,7 +41,7 @@ public final class CommandRepository {
     commands.remove(content);
   }
 
-  public Optional<DistributionClient> findCommandClient(UUID command) {
+  public Optional<ProxyClient> findCommandClient(UUID command) {
     return commands.keySet().stream()
       .filter(request -> request.id().equals(command))
       .map(DeviceRequestEntry::client)
