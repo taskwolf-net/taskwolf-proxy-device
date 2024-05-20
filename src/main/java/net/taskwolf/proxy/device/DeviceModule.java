@@ -57,6 +57,7 @@ public final class DeviceModule extends ProxyModule {
     packetRegistry.registerPacket(PacketIncomingDeviceLogout.class);
     packetRegistry.registerPacket(PacketIncomingNotificationRequest.class);
     packetRegistry.registerPacket(PacketIncomingNotificationResponse.class);
+    packetRegistry.registerPacket(PacketIncomingFileStorageRedirectRequest.class);
     packetRegistry.registerPacket(PacketIncomingCommandRequest.class);
     packetRegistry.registerPacket(PacketIncomingCommandResponse.class);
     packetRegistry.registerPacket(PacketIncomingFileStorageRequest.class);
@@ -105,6 +106,9 @@ public final class DeviceModule extends ProxyModule {
     repository.registerEvent(PacketIncomingFileStorageResponse.class,
       (client, packet) -> ProxyFileStorageResponseEvent.create(packet.storageId(),
         packet.success()));
+    repository.<ProxyClient, PacketIncomingFileStorageRedirectRequest>registerEvent(
+      PacketIncomingFileStorageRedirectRequest.class, (client, packet) ->
+        ProxyFileStorageRedirectRequestEvent.create(packet.storageId(), client));
     repository.<ProxyClient, PacketIncomingFileInfoRequest>registerEvent(
       PacketIncomingFileInfoRequest.class, (client, packet) ->
         ProxyFileInfoRequestEvent.create(packet.infoId(), packet.deviceId(),
@@ -131,6 +135,7 @@ public final class DeviceModule extends ProxyModule {
     hookRegistry.register(injector().getInstance(CommandResponseHook.class));
     hookRegistry.register(injector().getInstance(FileStorageRequestHook.class));
     hookRegistry.register(injector().getInstance(FileStorageResponseHook.class));
+    hookRegistry.register(injector().getInstance(FileStorageRedirectRequestHook.class));
     hookRegistry.register(injector().getInstance(FileInfoRequestHook.class));
     hookRegistry.register(injector().getInstance(FileInfoResponseHook.class));
     hookRegistry.register(injector().getInstance(FileDeleteRequestHook.class));
