@@ -103,8 +103,7 @@ public final class DeviceModule extends ProxyModule {
     repository.<ProxyClient, PacketIncomingFileStorageRequest>registerEvent(
       PacketIncomingFileStorageRequest.class, (client, packet) ->
         ProxyFileStorageRequestEvent.create(packet.storageId(), packet.deviceId(),
-          packet.devicePlatform(), packet.filePath(), packet.fileName(),
-          packet.content(), client));
+          packet.devicePlatform(), packet.filePath(), packet.fileName(), client));
     repository.registerEvent(PacketIncomingFileStorageResponse.class,
       (client, packet) -> ProxyFileStorageResponseEvent.create(packet.storageId(),
         packet.success()));
