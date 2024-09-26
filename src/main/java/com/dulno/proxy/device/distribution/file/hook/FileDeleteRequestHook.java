@@ -1,5 +1,7 @@
 package com.dulno.proxy.device.distribution.file.hook;
 
+import com.dulno.device.distribution.command.packet.outgoing.PacketOutgoingCommandRequest;
+import com.dulno.device.distribution.command.packet.outgoing.PacketOutgoingCommandResponse;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import lombok.AccessLevel;
@@ -20,14 +22,16 @@ public final class FileDeleteRequestHook implements Hook {
 
   @EventHook
   private void fileDeleteRequest(ProxyFileDeleteRequestEvent event) {
+    fileRepository.registerFile(event.deleteId(), event.client());
     var client = deviceRepository.findDeviceClient(event.deviceId());
-    if (client.isEmpty()) {
-      event.client().sendPacket(new PacketOutgoingFileDeleteResponse(
-        event.deleteId(), false));
+    if (client.isPresent()) {
+      client.get().sendPacket(new PacketOutgoingFileDeleteRequest(event.deleteId(),
+        event.deviceId(), event.devicePlatform(), event.filePath(), event.fileName()));
       return;
     }
-    client.get().sendPacket(new PacketOutgoingFileDeleteRequest(event.deleteId(),
-      event.deviceId(), event.filePath(), event.fileName()));
-    fileRepository.registerFile(event.deleteId(), event.client());
+    if (event.devicePlatform().isDesktop()) {
+      event.client().sendPacket(new PacketOutgoingFileDeleteResponse(
+        event.deleteId(), false));
+    }
   }
 }

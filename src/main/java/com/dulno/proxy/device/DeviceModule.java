@@ -1,5 +1,6 @@
 package com.dulno.proxy.device;
 
+import com.google.auth.oauth2.GoogleCredentials;
 import com.google.inject.Injector;
 import com.dulno.core.event.HookRegistry;
 import com.dulno.core.log.Log;
@@ -47,8 +48,8 @@ public final class DeviceModule extends ProxyModule {
     registerPackets();
     registerPacketEvents();
     registerHooks();
-    FileWorkspaceSchedule.create(injector().getInstance(DeviceConfiguration.class))
-      .start();
+    FileWorkspaceSchedule.create(injector().getInstance(DeviceConfiguration.class),
+      injector().getInstance(GoogleCredentials.class)).start();
   }
 
   private void registerPackets() throws Exception {
@@ -91,7 +92,7 @@ public final class DeviceModule extends ProxyModule {
     repository.<ProxyClient, PacketIncomingCommandRequest>registerEvent(
       PacketIncomingCommandRequest.class, (client, packet) ->
         ProxyCommandRequestEvent.create(packet.commandId(), packet.deviceId(),
-          packet.command(), client));
+          packet.devicePlatform(), packet.command(), client));
     repository.registerEvent(PacketIncomingCommandResponse.class,
       (client, packet) -> ProxyCommandResponseEvent.create(packet.commandId(),
         packet.delivered(), packet.output(), packet.errorMessage(),
@@ -102,7 +103,8 @@ public final class DeviceModule extends ProxyModule {
     repository.<ProxyClient, PacketIncomingFileStorageRequest>registerEvent(
       PacketIncomingFileStorageRequest.class, (client, packet) ->
         ProxyFileStorageRequestEvent.create(packet.storageId(), packet.deviceId(),
-          packet.filePath(), packet.fileName(), packet.content(), client));
+          packet.devicePlatform(), packet.filePath(), packet.fileName(),
+          packet.content(), client));
     repository.registerEvent(PacketIncomingFileStorageResponse.class,
       (client, packet) -> ProxyFileStorageResponseEvent.create(packet.storageId(),
         packet.success()));
@@ -112,14 +114,14 @@ public final class DeviceModule extends ProxyModule {
     repository.<ProxyClient, PacketIncomingFileInfoRequest>registerEvent(
       PacketIncomingFileInfoRequest.class, (client, packet) ->
         ProxyFileInfoRequestEvent.create(packet.infoId(), packet.deviceId(),
-          packet.filePath(), packet.fileName(), client));
+          packet.devicePlatform(), packet.filePath(), packet.fileName(), client));
     repository.registerEvent(PacketIncomingFileInfoResponse.class,
       (client, packet) -> ProxyFileInfoResponseEvent.create(packet.infoId(),
         packet.content(), packet.success()));
     repository.<ProxyClient, PacketIncomingFileDeleteRequest>registerEvent(
       PacketIncomingFileDeleteRequest.class, (client, packet) ->
         ProxyFileDeleteRequestEvent.create(packet.deleteId(), packet.deviceId(),
-          packet.filePath(), packet.fileName(), client));
+          packet.devicePlatform(), packet.filePath(), packet.fileName(), client));
     repository.registerEvent(PacketIncomingFileDeleteResponse.class,
       (client, packet) -> ProxyFileDeleteResponseEvent.create(packet.deleteId(),
         packet.success()));

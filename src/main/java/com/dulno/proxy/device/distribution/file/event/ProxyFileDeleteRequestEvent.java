@@ -1,5 +1,6 @@
 package com.dulno.proxy.device.distribution.file.event;
 
+import com.dulno.device.structure.DevicePlatform;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
@@ -14,6 +15,7 @@ import java.util.UUID;
 public final class ProxyFileDeleteRequestEvent extends Event {
   private final UUID deleteId;
   private final String deviceId;
+  private final DevicePlatform devicePlatform;
   private final String filePath;
   private final String fileName;
   private final ProxyClient client;

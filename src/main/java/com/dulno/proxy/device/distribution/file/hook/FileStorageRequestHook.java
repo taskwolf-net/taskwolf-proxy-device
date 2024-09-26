@@ -1,5 +1,7 @@
 package com.dulno.proxy.device.distribution.file.hook;
 
+import com.dulno.device.distribution.file.packet.outgoing.PacketOutgoingFileInfoRequest;
+import com.dulno.device.distribution.file.packet.outgoing.PacketOutgoingFileInfoResponse;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import lombok.AccessLevel;
@@ -22,16 +24,20 @@ public final class FileStorageRequestHook implements Hook {
 
   @EventHook
   private void fileStorageRequest(ProxyFileStorageRequestEvent event) {
+    fileRepository.registerFile(event.storeId(), event.client());
     var client = deviceRepository.findDeviceClient(event.deviceId());
-    if (client.isEmpty()) {
-      event.client().sendPacket(new PacketOutgoingFileStorageResponse(
-        event.storeId(), false));
+    if (client.isPresent()) {
+      client.get().sendPacket(new PacketOutgoingFileStorageRequest(event.storeId(),
+        event.deviceId(), event.devicePlatform(), event.filePath(), event.fileName(),
+        event.content()));
+      //TODO
+      fileStorageRepository.registerStorage(event.storeId(), client.get());
       return;
     }
-    client.get().sendPacket(new PacketOutgoingFileStorageRequest(event.storeId(),
-      event.deviceId(), event.filePath(), event.fileName(), event.content()));
-    fileRepository.registerFile(event.storeId(), event.client());
-    fileStorageRepository.registerStorage(event.storeId(), client.get());
+    if (event.devicePlatform().isDesktop()) {
+      event.client().sendPacket(new PacketOutgoingFileStorageResponse(
+        event.storeId(), false));
+    }
   }
 }
 

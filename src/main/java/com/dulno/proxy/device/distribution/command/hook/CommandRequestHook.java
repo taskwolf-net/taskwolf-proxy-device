@@ -20,14 +20,16 @@ public final class CommandRequestHook implements Hook {
 
   @EventHook
   private void commandRequest(ProxyCommandRequestEvent event) {
+    commandRepository.registerCommand(event.commandId(), event.client());
     var client = deviceRepository.findDeviceClient(event.deviceId());
-    if (client.isEmpty()) {
-      event.client().sendPacket(new PacketOutgoingCommandResponse(
-        event.commandId(), false, "", "", -1));
+    if (client.isPresent()) {
+      client.get().sendPacket(new PacketOutgoingCommandRequest(event.commandId(),
+        event.deviceId(), event.devicePlatform(), event.command()));
       return;
     }
-    client.get().sendPacket(new PacketOutgoingCommandRequest(event.commandId(),
-      event.deviceId(), event.command()));
-    commandRepository.registerCommand(event.commandId(), event.client());
+    if (event.devicePlatform().isDesktop()) {
+      event.client().sendPacket(new PacketOutgoingCommandResponse(
+        event.commandId(), false, "", "", -1));
+    }
   }
 }

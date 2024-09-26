@@ -1,5 +1,6 @@
 package com.dulno.proxy.device.distribution.file;
 
+import com.google.auth.oauth2.GoogleCredentials;
 import lombok.RequiredArgsConstructor;
 import com.dulno.device.DeviceConfiguration;
 import org.json.JSONObject;
@@ -17,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor(staticName = "create")
 public final class FileWorkspaceSchedule {
   private final DeviceConfiguration deviceConfiguration;
+  private final GoogleCredentials googleCredentials;
   private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(1);
   private ScheduledFuture<?> scheduler;
 
@@ -30,18 +32,26 @@ public final class FileWorkspaceSchedule {
       WORKSPACE_CHECK_TIME_UNIT);
   }
 
-  private static final String FIREBASE_URL = "https://fcm.googleapis.com/fcm/send";
+  private static final String FIREBASE_URL =
+    "https://fcm.googleapis.com/v1/projects/%s/messages:send";
 
   private void execute() {
-    var requestBody = new JSONObject(Map.of("to", "/topics/dulno-workspace-monitor",
-      "data", Map.of("workspaceMonitor", true)));
-    var requestBuilder = HttpRequest.newBuilder().uri(URI.create(FIREBASE_URL))
-      .POST(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
-      .setHeader("Content-Type", "application/json")
-      .setHeader("Authorization", "key=" + deviceConfiguration.firebaseToken())
-      .build();
-    HttpClient.newHttpClient().sendAsync(requestBuilder,
-      HttpResponse.BodyHandlers.ofByteArray());
+    try {
+      googleCredentials.refreshIfExpired();
+      var token = googleCredentials.getAccessToken().getTokenValue();
+      var requestBody = new JSONObject(Map.of("to", "/topics/dulno-workspace-monitor",
+        "data", Map.of("workspaceMonitor", true)));
+      var url = String.format(FIREBASE_URL, deviceConfiguration.firebaseProjectId());
+      var requestBuilder = HttpRequest.newBuilder().uri(URI.create(url))
+        .POST(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
+        .setHeader("Content-Type", "application/json")
+        .setHeader("Authorization", "Bearer " + token)
+        .build();
+      HttpClient.newHttpClient().sendAsync(requestBuilder,
+        HttpResponse.BodyHandlers.ofByteArray());
+    } catch (Exception exception) {
+      exception.printStackTrace();
+    }
   }
 
   public void stop() {
