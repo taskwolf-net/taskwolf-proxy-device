@@ -116,7 +116,10 @@ public final class DeviceModule extends ProxyModule {
           packet.devicePlatform(), packet.filePath(), packet.fileName(), client));
     repository.registerEvent(PacketIncomingFileInfoResponse.class,
       (client, packet) -> ProxyFileInfoResponseEvent.create(packet.infoId(),
-        packet.content(), packet.success()));
+        packet.success()));
+    repository.<ProxyClient, PacketIncomingFileInfoRedirectRequest>registerEvent(
+      PacketIncomingFileInfoRedirectRequest.class, (client, packet) ->
+        ProxyFileInfoRedirectRequestEvent.create(packet.infoId(), client));
     repository.<ProxyClient, PacketIncomingFileDeleteRequest>registerEvent(
       PacketIncomingFileDeleteRequest.class, (client, packet) ->
         ProxyFileDeleteRequestEvent.create(packet.deleteId(), packet.deviceId(),

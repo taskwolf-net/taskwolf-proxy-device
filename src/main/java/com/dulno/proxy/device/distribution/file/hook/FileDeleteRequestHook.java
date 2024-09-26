@@ -1,7 +1,5 @@
 package com.dulno.proxy.device.distribution.file.hook;
 
-import com.dulno.device.distribution.command.packet.outgoing.PacketOutgoingCommandRequest;
-import com.dulno.device.distribution.command.packet.outgoing.PacketOutgoingCommandResponse;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import lombok.AccessLevel;

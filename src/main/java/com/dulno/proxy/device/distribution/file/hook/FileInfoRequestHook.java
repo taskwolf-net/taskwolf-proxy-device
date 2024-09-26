@@ -1,7 +1,5 @@
 package com.dulno.proxy.device.distribution.file.hook;
 
-import com.dulno.device.distribution.file.packet.outgoing.PacketOutgoingFileDeleteRequest;
-import com.dulno.device.distribution.file.packet.outgoing.PacketOutgoingFileDeleteResponse;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import lombok.AccessLevel;
@@ -31,7 +29,7 @@ public final class FileInfoRequestHook implements Hook {
     }
     if (event.devicePlatform().isDesktop()) {
       event.client().sendPacket(new PacketOutgoingFileInfoResponse(
-        event.infoId(), new byte[0], false));
+        event.infoId(), false));
     }
   }
 }
