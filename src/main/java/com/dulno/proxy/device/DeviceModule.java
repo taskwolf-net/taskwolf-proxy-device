@@ -65,6 +65,7 @@ public final class DeviceModule extends ProxyModule {
     packetRegistry.registerPacket(PacketIncomingFileStorageResponse.class);
     packetRegistry.registerPacket(PacketIncomingFileInfoRequest.class);
     packetRegistry.registerPacket(PacketIncomingFileInfoResponse.class);
+    packetRegistry.registerPacket(PacketIncomingFileInfoRedirectRequest.class);
     packetRegistry.registerPacket(PacketIncomingFileDeleteRequest.class);
     packetRegistry.registerPacket(PacketIncomingFileDeleteResponse.class);
   }
@@ -142,6 +143,7 @@ public final class DeviceModule extends ProxyModule {
     hookRegistry.register(injector().getInstance(FileStorageRedirectRequestHook.class));
     hookRegistry.register(injector().getInstance(FileInfoRequestHook.class));
     hookRegistry.register(injector().getInstance(FileInfoResponseHook.class));
+    hookRegistry.register(injector().getInstance(FileInfoRedirectRequestHook.class));
     hookRegistry.register(injector().getInstance(FileDeleteRequestHook.class));
     hookRegistry.register(injector().getInstance(FileDeleteResponseHook.class));
   }
