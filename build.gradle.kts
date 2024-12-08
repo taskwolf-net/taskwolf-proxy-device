@@ -62,7 +62,7 @@ dependencies {
   testAnnotationProcessor("org.projectlombok:lombok:1.18.36")
 
   compileOnly("org.json:json:20240303")
-  compileOnly("commons-io:commons-io:2.16.1")
+  compileOnly("commons-io:commons-io:2.18.0")
 }
 
 tasks.test {
